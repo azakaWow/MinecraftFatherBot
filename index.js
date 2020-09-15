@@ -7,6 +7,7 @@ let server = null;
 
 bot.on("message", (msg) => {
   const chatId = msg.chat.id;
+  const command = msg.text.toLowerCase();
 
   let username = 'anonymous';
   if(msg.chat && msg.chat.username) username = msg.chat.username;
@@ -17,15 +18,15 @@ bot.on("message", (msg) => {
     bot.sendMessage(OWNER_CHAT_ID, ownerMsg);
   }
  
-  if (msg.text === "start" && server === null) {
+  if (command === "start" && server === null) {
     startServer();
     sendMessage("Starting... check it, in 20sec",`${username} -  started server`);
-  } else if (msg.text === "start" && server !== null) {
+  } else if (command === "start" && server !== null) {
     sendMessage("Server is already working",`${username} -  Tried to start a running server`);
-  } else if (msg.text === `stop ${STOP_SERVER_PASS}`) {
+  } else if (command === `stop ${STOP_SERVER_PASS}`) {
     stopServer();
     sendMessage("Stopping server",`${username} -  stopped server`);
-  } else if (msg.text === `status`) {
+  } else if (command === `status`) {
     sendMessage(`Server is ${server === null ? 'down' : 'up'}`,`${username} - is curious about server status`);
   } else {
     sendMessage("Oh shit I am sorry", `${username} -  is sorry`);
