@@ -3,6 +3,7 @@ const cp = require("child_process");
 const { TOKEN, OWNER_CHAT_ID, STOP_SERVER_PASS, START_SERVER_SHELL_SCRIPT } = require('./config');
 
 const bot = new TelegramBot(TOKEN, { polling: true });
+const ownerChatId = +OWNER_CHAT_ID;
 let server = null;
 
 bot.on("message", (msg) => {
@@ -15,7 +16,7 @@ bot.on("message", (msg) => {
 
   function sendMessage(userMsg, ownerMsg) {
     bot.sendMessage(chatId, userMsg);
-    bot.sendMessage(OWNER_CHAT_ID, ownerMsg);
+    if(chatId !== ownerChatId) bot.sendMessage(ownerChatId, ownerMsg);
   }
  
   if (command === "start" && server === null) {
@@ -42,8 +43,8 @@ const startServer = () => {
     console.log(`Server process exited with code ${code}`);
     });
   } catch(e) {
-    bot.sendMessage(OWNER_CHAT_ID, 'Error occurred while starting the server');
-    bot.sendMessage(OWNER_CHAT_ID, e);
+    bot.sendMessage(ownerChatId, 'Error occurred while starting the server');
+    bot.sendMessage(ownerChatId, e);
   }
 };
 
@@ -53,7 +54,7 @@ const stopServer = () => {
     server.stdin.end();
     server = null;
   } catch(e) {
-    bot.sendMessage(OWNER_CHAT_ID, 'Error occurred while stopping the server');
-    bot.sendMessage(OWNER_CHAT_ID, e);
+    bot.sendMessage(ownerChatId, 'Error occurred while stopping the server');
+    bot.sendMessage(ownerChatId, e);
   }
 };
